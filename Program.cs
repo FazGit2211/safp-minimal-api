@@ -6,12 +6,8 @@ var connectionString = builder.Configuration.GetConnectionString("SafpContextDb"
 //Asignar el contexto a la base de datos
 builder.Services.AddSqlite<SafpContext>(connectionString);
 var app = builder.Build();
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    SeedData.Initialize(services);
-}
-
+//Rutas para los endpoinst
 ClientRoutes.Map(app);
-
+ProductRoutes.MapProduct(app);
+ProviderRoutes.MapProvider(app);
 app.Run();

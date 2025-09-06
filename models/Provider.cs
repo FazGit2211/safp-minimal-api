@@ -1,8 +1,9 @@
-public class Provider {
+public class Provider
+{
     public int Id { get; set; }
-    private string Name { get; set; }
-    private string Address { get; set; }
-    private string Email { get; set; }
-    private string Cuit { get; set; }
-    private int PhoneNumber { get; set; }
+    public string Name { get; set; }
+    public string? Address { get; set; }
+    public string? Email { get; set; }
+    public string? Cuit { get; set; }
+    public int? PhoneNumber { get; set; }
 }
