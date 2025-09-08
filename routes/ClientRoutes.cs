@@ -9,8 +9,8 @@ public static class ClientRoutes
         {
             try
             {
-                var clients = await db.Clients.ToListAsync();
-                return clients.Count != 0 ? Results.Ok(clients) : Results.NotFound();
+                List<Client> clientList = await db.Clients.ToListAsync();
+                return clientList.Count > 0 ? Results.Ok(clientList) : Results.NoContent();
             }
             catch (System.Exception)
             {
@@ -22,7 +22,12 @@ public static class ClientRoutes
         {
             try
             {
-                return await db.Clients.FindAsync(id) is Client client ? Results.Ok(client) : Results.NotFound();
+                Client clients = await db.Clients.Include(prod => prod.Products).FirstAsync();
+                if (clients is null)
+                {
+                    return Results.NotFound();
+                }
+                return Results.Ok(clients);
             }
             catch (System.Exception)
             {
@@ -68,7 +73,9 @@ public static class ClientRoutes
             }
         });
         //Endpoint Delete Client
-        app.MapDelete("/api/client/{id}", async (SafpContext db, int id) => { try
+        app.MapDelete("/api/client/{id}", async (SafpContext db, int id) =>
+        {
+            try
             {
                 var clientExist = await db.Clients.FindAsync(id);
                 if (clientExist is null)
@@ -78,10 +85,11 @@ public static class ClientRoutes
                 db.Remove(clientExist);
                 await db.SaveChangesAsync();
                 return Results.NoContent();
-        }
+            }
             catch (System.Exception)
             {
                 throw;
-            } });
+            }
+        });
     }
 }

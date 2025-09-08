@@ -9,7 +9,8 @@ public static class ProductRoutes
         {
             try
             {
-                return await db.Products.ToListAsync();
+                List<Product> productList = await db.Products.ToListAsync();
+                return productList.Count > 0 ? Results.Ok(productList) : Results.NoContent();
             }
             catch (System.Exception)
             {
@@ -73,6 +74,54 @@ public static class ProductRoutes
                     return Results.NotFound();
                 }
                 db.Remove(productExist);
+                await db.SaveChangesAsync();
+                return Results.NoContent();
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        });
+        //Endpoint Add Products of Client
+        app.MapPost("/api/product/client/{id}", async (SafpContext db, int id, IList<Product> products) =>
+        {
+            try
+            {
+                Client? clientExist = await db.Clients.FindAsync(id);
+                List<Product> productList = new List<Product>();
+                if (clientExist is null)
+                {
+                    return Results.NotFound();
+                }
+                foreach (var item in products)
+                {
+                    productList.Add(item);
+                }
+                clientExist.Products = productList;
+                await db.SaveChangesAsync();
+                return Results.NoContent();
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        });
+        //Endpoint Add Products of Provider
+        app.MapPost("/api/product/provider/{id}", async (SafpContext db, int id, List<Product> products) =>
+        {
+            try
+            {
+                Provider? providerExist = await db.Providers.FindAsync(id);
+                List<Product> productList = new List<Product>();
+                if (providerExist is null)
+                {
+                    return Results.NotFound();
+                }
+                foreach (var item in products)
+                {
+                    productList.Add(item);
+                }
+                providerExist.Products = productList;
                 await db.SaveChangesAsync();
                 return Results.NoContent();
             }
