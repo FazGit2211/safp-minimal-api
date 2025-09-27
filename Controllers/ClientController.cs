@@ -27,14 +27,13 @@ public class ClientController : ControllerBase
         }
         catch (System.Exception ex)
         {
-
             return StatusCode(500, $"Error Servidor {ex}");
         }
     }
     //Endpoint Get Client By Id
     [HttpGet]
     [Route("/api/client/{id}")]
-    public async Task<ActionResult<Client>> GetClient(int id)
+    public async Task<ActionResult<Client>> GetClientById(int id)
     {
         try
         {
@@ -59,9 +58,9 @@ public class ClientController : ControllerBase
             var clientCreated = await _clientService.PostClient(client);
             if (client is null)
             {
-                return Ok(client);
+                return BadRequest();
             }
-            return BadRequest();
+            return Ok(clientCreated);
         }
         catch (System.Exception ex)
         {

@@ -7,10 +7,12 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<ClientService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ProductService>();
 //Asignar la cadena de conexión
 var connectionString = builder.Configuration.GetConnectionString("SafpContextDb");
 //Asignar el contexto a la base de datos
-builder.Services.AddSqlite<SafpContext>(connectionString);
+//builder.Services.AddSqlite<SafpContext>(connectionString);
+builder.Services.AddSqlServer<SafpContext>(connectionString);
 //Configurar Jwt
 builder.Services.AddAuthentication(options => options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
 {

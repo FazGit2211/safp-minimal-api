@@ -43,7 +43,7 @@ public class ClientService : IClient
         {
             _context.Add(client);
             await _context.SaveChangesAsync();
-            return null;
+            return client;
         }
         catch (System.Exception)
         {
